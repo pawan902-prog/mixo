@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import Headerlayout from "./HeaderLayout";
 import { Link, useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
+import axios from "axios";
 
 const PhotoClick = () => {
     const [isCapturing, setIsCapturing] = useState(false);
@@ -12,6 +13,7 @@ const PhotoClick = () => {
     const [webcamReady, setWebcamReady] = useState(false);
     const [webcamError, setWebcamError] = useState(null);
     const [preview, setPreview] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const webcamRef = useRef(null);
     const [facingMode, setFacingMode] = useState("environment"); // "environment" for back, "user" for front
     const [file, setFile] = useState(null)
@@ -93,10 +95,89 @@ const PhotoClick = () => {
         }
     }, [showCountdown, countdown]);
     const navigate = useNavigate()
-    const handleSubmitt = () => {
-        setPreview(true)
-        navigate('/ScannerOutput')
+    const handleSubmitt = async () => {
+        try {
+            setIsSubmitting(true)
+            setPreview(true)
 
+            // Get the selected avatar ID from localStorage
+            const selectedAvatarId = localStorage.getItem("activeAvatarId")
+            if (!selectedAvatarId) {
+                alert("Please select an avatar first. Go back to avatar selection.")
+                setIsSubmitting(false)
+                setPreview(false)
+                return
+            }
+
+            console.log('Selected Avatar ID:', selectedAvatarId)
+            console.log('Captured image available:', !!capturedImage)
+
+            // Create FormData for the registration API
+            const formData = new FormData()
+
+            // Convert base64 image to File object
+            try {
+                const response = await fetch(capturedImage)
+                const blob = await response.blob()
+                const file = new File([blob], 'captured-image.jpg', { type: 'image/jpeg' })
+                formData.append('sourceImage', file)
+            } catch (error) {
+                console.error('Error converting image:', error)
+                alert('Error processing image. Please try again.')
+                setIsSubmitting(false)
+                setPreview(false)
+                return
+            }
+
+            formData.append('avatarId', selectedAvatarId)
+
+            // Call the registration API
+            console.log('Sending registration request...')
+            const apiResponse = await axios.post(
+                'https://tagglabsapi.logarithm.co.in/TagglabsServer1api/ihcl/register-ihcl-user',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    timeout: 30000, // 30 second timeout
+                }
+            )
+
+            console.log('Registration successful:', apiResponse.data)
+
+            // Store the registration response if needed
+            localStorage.setItem("registrationResponse", JSON.stringify(apiResponse.data))
+
+            // Save the captured image to localStorage for potential future use
+            if (capturedImage) {
+                localStorage.setItem("sourceImage", capturedImage)
+            }
+
+            // Navigate to the next page
+            navigate('/ScannerOutput')
+
+        } catch (error) {
+            console.error('Registration failed:', error)
+            setPreview(false)
+
+            let errorMessage = 'Registration failed. Please try again.'
+
+            if (error.response) {
+                // Server responded with error status
+                errorMessage = `Server error: ${error.response.status} - ${error.response.data?.message || 'Unknown error'}`
+            } else if (error.request) {
+                // Network error
+                errorMessage = 'Network error. Please check your connection and try again.'
+            } else {
+                // Other error
+                errorMessage = error.message || 'An unexpected error occurred.'
+            }
+
+            alert(errorMessage)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -125,7 +206,7 @@ const PhotoClick = () => {
                     <div className="flex justify-center items-center md:mt-[50px] mt-[30px]">
                         <div className="relative">
                             {/* Circular frame with border */}
-                            <div className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] xl:w-[845px] xl:h-[845px] rounded-full border-[4px] md:border-[6px] border-[#8DB6D5] overflow-hidden bg-black flex items-center justify-center">
+                            <div className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] xl:w-[845px] xl:h-[845px] rounded-full border-[4px] md:border-[20px] border-[#8DB6D5] overflow-hidden bg-black flex items-center justify-center">
                                 {showCountdown ? (
                                     // Countdown display
                                     <div className="text-white text-6xl md:text-8xl font-bold">
@@ -184,9 +265,10 @@ const PhotoClick = () => {
                                 </button>
                                 <button
                                     onClick={handleSubmitt}
-                                    className="px-6 py-3 sm:px-10 md:px-[60px] lg:px-[96px] mt-[30px] md:mt-[100px] lg:mt-[130px] bg-white text-[#002A49] rounded-lg font-semibold text-lg sm:text-2xl md:text-[40px] lg:text-[63px] boldCalibri"
+                                    disabled={isSubmitting}
+                                    className={`px-6 py-3 sm:px-10 md:px-[60px] lg:px-[96px] mt-[30px] md:mt-[100px] lg:mt-[130px] bg-white text-[#002A49] rounded-lg font-semibold text-lg sm:text-2xl md:text-[40px] lg:text-[63px] boldCalibri ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
                                 >
-                                    Submit
+                                    {isSubmitting ? 'Processing...' : 'Submit'}
                                 </button>
                             </>
                         )}

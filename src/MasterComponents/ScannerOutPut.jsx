@@ -5,11 +5,44 @@ import QRCode from "react-qr-code";
 
 const ScannerOutput = () => {
     const [qrCodeData, setQrCodeData] = useState("https://example.com/download-photo");
+    const [generatedImageUrl, setGeneratedImageUrl] = useState("/superhero-photo.jpg");
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Generate a unique QR code data (you can replace this with actual photo download URL)
+    // Get the API response data from localStorage
     useEffect(() => {
-        const uniqueId = Date.now().toString();
-        setQrCodeData(`https://ihcl-photobooth.com/download/${uniqueId}`);
+        try {
+            const registrationResponse = localStorage.getItem("registrationResponse");
+            if (registrationResponse) {
+                const responseData = JSON.parse(registrationResponse);
+                console.log('Registration response data:', responseData);
+
+                if (responseData.result) {
+                    // Set the generated image URL
+                    if (responseData.result.imageURL) {
+                        console.log('Setting generated image URL:', responseData.result.imageURL);
+                        setGeneratedImageUrl(responseData.result.imageURL);
+                    } else {
+                        console.warn('No imageURL in response');
+                    }
+
+                    // Set the download link for QR code
+                    if (responseData.result.downloadLink) {
+                        console.log('Setting download link for QR code:', responseData.result.downloadLink);
+                        setQrCodeData(responseData.result.downloadLink);
+                    } else {
+                        console.warn('No downloadLink in response');
+                    }
+                } else {
+                    console.warn('No result in registration response');
+                }
+            } else {
+                console.warn('No registration response found in localStorage');
+            }
+        } catch (error) {
+            console.error('Error parsing registration response:', error);
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
 
     return (
@@ -23,15 +56,30 @@ const ScannerOutput = () => {
                             {/* Superhero Image Frame */}
                             <div className="relative flex justify-center items-center">
                                 <div className="w-[200px] z-50 h-[300px] md:w-[566px] md:h-[746px] lg:w-[400px] lg:h-[600px] rounded-2xl border-4 border-[#8DB6D5] overflow-hidden bg-white shadow-2xl">
-                                    <img
-                                        src="/superhero-photo.jpg" // Replace with actual superhero photo
-                                        alt="Superhero Photo"
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            // Fallback to a placeholder if image doesn't exist
-                                            e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5TdXBlcmhlcm8gUGhvdG88L3RleHQ+PC9zdmc+";
-                                        }}
-                                    />
+                                    {isLoading ? (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                                            <div className="text-gray-600 text-lg">Loading...</div>
+                                        </div>
+                                    ) : generatedImageUrl && generatedImageUrl !== "/superhero-photo.jpg" ? (
+                                        <img
+                                            src={generatedImageUrl}
+                                            alt="Generated Superhero Photo"
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                console.error('Error loading generated image:', e);
+                                                // Fallback to a placeholder if image doesn't exist
+                                                e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5TdXBlcmhlcm8gUGhvdG88L3RleHQ+PC9zdmc+";
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                                            <div className="text-gray-600 text-center p-4">
+                                                <div className="text-2xl mb-2">🦸‍♂️</div>
+                                                <div className="text-sm">Generated image not available</div>
+                                                <div className="text-xs mt-2">Please try again</div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* QR Code overlapping the frame */}

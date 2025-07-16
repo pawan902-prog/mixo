@@ -7,6 +7,8 @@ const GenderSelection = () => {
 
     const handleGenderSelect = (gender) => {
         setSelectedGender(gender);
+        // Store gender selection in localStorage for use in other components
+        localStorage.setItem("selectedGender", gender);
     };
 
     return (

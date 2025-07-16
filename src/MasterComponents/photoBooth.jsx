@@ -7,202 +7,229 @@ import axios from "axios"
 import "swiper/css"
 import "swiper/css/pagination"
 import "swiper/css/effect-coverflow"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Headerlayout from "./HeaderLayout"
-const photos = [
-    {
-        id: 1,
-        src: "/hero.png",
-        alt: "Fantasy Warrior 1",
-        title: "Medieval Knight",
-    },
-    {
-        id: 2,
-        src: "/hero.png",
-        alt: "Fantasy Warrior 2",
-        title: "Royal Guardian",
-    },
-    {
-        id: 3,
-        src: "/hero.png",
-        alt: "Fantasy Warrior 3",
-        title: "Mystic Sorcerer",
-    },
-    {
-        id: 4,
-        src: "/hero.png",
-        alt: "Fantasy Warrior 4",
-        title: "Dragon Slayer",
-    },
-    {
-        id: 5,
-        src: "/hero.png",
-        alt: "Fantasy Warrior 5",
-        title: "Arcane Warrior",
-    },
-]
+
 const PhotoBoothScreen = () => {
-    const bg = './background.png'
+  const bg = './background.png'
+  const navigate = useNavigate()
 
-    const [avatars, setAvatars] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
-    const [activeSlideIndex, setActiveSlideIndex] = useState(0)
+  const [avatars, setAvatars] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0)
 
-    const data = JSON.parse(localStorage.getItem("userRegistration") || "{}")
+  const data = JSON.parse(localStorage.getItem("userRegistration") || "{}")
+  const selectedGender = localStorage.getItem("selectedGender")
 
-    useEffect(() => {
-        axios
-            .get(
-                `https://tagglabsapi.logarithm.co.in/TagglabsServer1api/avatars/avatar-list?projectId=6864bb25c6dce5f7bcf906ad&gender=${data?.gender || 2}&pageNumber=1&itemsPerPage=100`,
-            )
-            .then((res) => {
-                const data = res.data.result || []
+  // Map gender selection to API parameter (1 for male, 2 for female)
+  const getGenderParam = () => {
+    if (selectedGender === 'male') return 1
+    if (selectedGender === 'female') return 2
+    return 2 // default to female if no selection
+  }
 
-                // If exactly 2 avatars, add one dummy object
+  useEffect(() => {
+    // Fetch avatars from the new API endpoint
+    const genderParam = getGenderParam()
+    console.log('Fetching avatars for gender:', selectedGender, 'API param:', genderParam)
 
+    // Show loading state while fetching
+    setIsLoading(true)
 
-                setAvatars(data)
-                setIsLoading(false)
+    axios
+      .get(
+        `https://tagglabsapi.logarithm.co.in/TagglabsServer1api/avatars/avatar-list?projectId=68772bdaf74c1a12f0ae347b&gender=${genderParam}&pageNumber=1&itemsPerPage=100`,
+      )
+      .then((res) => {
+        const avatarData = res.data.result || []
+        setAvatars(avatarData)
+        setIsLoading(false)
 
-                // Set initial active avatar
-                if (data.length > 0) {
-                    localStorage.setItem("activeAvatarId", data[0].avatarId)
-                }
-            })
-            .catch((err) => {
-                console.error("Failed to fetch avatars", err)
-                setIsLoading(false)
-            })
-    }, [])
-
-    const handleSlideClick = (slideId) => {
-        localStorage.setItem("activeAvatarId", slideId)
-    }
-
-    const handleSlideChange = (swiper) => {
-        setActiveSlideIndex(swiper.realIndex)
-        const currentSlide = avatars[swiper.realIndex]
-        if (currentSlide) {
-            localStorage.setItem("activeAvatarId", currentSlide.avatarId)
+        // Set initial active avatar
+        if (avatarData.length > 0) {
+          localStorage.setItem("activeAvatarId", avatarData[0].avatarId)
         }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch avatars", err)
+        setIsLoading(false)
+      })
+  }, [])
+
+  const handleSlideClick = (slideId) => {
+    localStorage.setItem("activeAvatarId", slideId)
+  }
+
+  const handleSlideChange = (swiper) => {
+    setActiveSlideIndex(swiper.realIndex)
+    const currentSlide = avatars[swiper.realIndex]
+    if (currentSlide) {
+      localStorage.setItem("activeAvatarId", currentSlide.avatarId)
     }
+  }
 
-    // Show loading state
+  const handleNextClick = () => {
+    // Navigate to photo capture screen
+    navigate('/PhotoClick')
+  }
 
-
+  // Show loading state
+  if (isLoading) {
     return (
-        <div
-            className=""
+      <div className="min-h-screen bg-cover bg-no-repeat flex items-center justify-center"
+        style={{ background: `url(${bg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
+        <div className="text-white text-2xl">Loading avatars...</div>
+      </div>
+    )
+  }
+
+  // Show error state if no gender is selected
+  if (!selectedGender) {
+    return (
+      <div className="min-h-screen bg-cover bg-no-repeat flex items-center justify-center"
+        style={{ background: `url(${bg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
+        <div className="text-white text-center">
+          <div className="text-2xl mb-4">Please select your gender first</div>
+          <Link to="/genderSelection">
+            <button className="bg-white text-black px-6 py-3 rounded-lg hover:bg-gray-100">
+              Go to Gender Selection
+            </button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // Show error state if no avatars are available
+  if (avatars.length === 0) {
+    return (
+      <div className="min-h-screen bg-cover bg-no-repeat flex items-center justify-center"
+        style={{ background: `url(${bg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
+        <div className="text-white text-center">
+          <div className="text-2xl mb-4">No avatars available for {selectedGender}</div>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-white text-black px-6 py-3 rounded-lg hover:bg-gray-100"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="">
+      {/* Logo */}
+      <div className=" ">
+        <div className="md:px-[80px] px-[20px] min-h-screen  bg-cover bg-no-repeat h-full  text-center"
+          style={{ background: `url(${bg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
+
         >
-            {/* Logo */}
-            <div className=" ">
-                <div className="md:px-[80px] px-[20px] min-h-screen  bg-cover bg-no-repeat h-full  text-center"
-                    style={{ background: `url(${bg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
+          <div className=" flex flex-col items-center ">
+            <Link to='/'>   <img src="./logo.png" className="mt-[64px] md:w-[666px] md:h-[337px] w-[150px] h-[80px] z-50" /></Link>
 
-                >
-                    <div className=" flex flex-col items-center ">
-                        <Link to='/'>   <img src="./logo.png" className="mt-[64px] md:w-[666px] md:h-[337px] w-[150px] h-[80px] z-50" /></Link>
+            <div className="mb-12 z-20">
+              <div className="swiper-pagination-custom flex justify-center gap-3"></div>
+            </div>
 
-                        <div className="mb-12 z-20">
-                            <div className="swiper-pagination-custom flex justify-center gap-3"></div>
-                        </div>
-
-                        {/* Main Slider Container */}
-                        <div className="relative w-full max-w-[1200px] mx-auto overflow-hidden">
-                            <Swiper
-                                onSlideChange={handleSlideChange}
-                                onSwiper={(swiper) => {
-                                    // Ensure first slide is active on initialization
-                                    setTimeout(() => {
-                                        swiper.slideTo(0, 0)
-                                    }, 100)
-                                }}
-                                modules={[Pagination, EffectCoverflow, Autoplay]}
-                                loop={true}
-                                grabCursor={true}
-                                centeredSlides={true}
-                                slidesPerView={2}
-                                spaceBetween={-150}
-                                initialSlide={0} // Always start with first slide
-                                effect="coverflow"
-                                coverflowEffect={{
-                                    rotate: 0,
-                                    stretch: 0,
-                                    depth: 100,
-                                    modifier: 1,
-                                    slideShadows: false,
-                                }}
-                                pagination={{
-                                    clickable: true,
-                                    dynamicBullets: false,
-                                    el: ".swiper-pagination-custom",
-                                }}
-                                breakpoints={{
-                                    0: {
-                                        slidesPerView: 2,
-                                        spaceBetween: -100,
-                                    },
-                                    768: {
-                                        slidesPerView: 2,
-                                        spaceBetween: -120,
-                                    },
-                                    1024: {
-                                        slidesPerView: 2,
-                                        spaceBetween: -150,
-                                    },
-                                }}
-                                className="vida-swiper"
-                            >
-                                {photos.map((avatar, index) => (
-                                    <SwiperSlide key={avatar.avatarId} className="vida-slide">
-                                        <div
-                                            className={`slide-card ${index === activeSlideIndex ? "active" : "inactive"}`}
-                                            onClick={() => handleSlideClick(avatar.avatarId)}
-                                        >
-                                            <div className="card-inner">
-                                                <img src={avatar.src || "/placeholder.svg"} alt="avatar" className="avatar-image" />
-                                            </div>
-                                        </div>
-                                    </SwiperSlide>
-                                ))}
-                            </Swiper>
-                        </div>
-
-
-                        <div className="">
-                            <Link to='/PhotoClick'>
-                                <button
-                                    className="
-    bg-white 
-    px-6 py-4 
-    md:px-[150px] md:py-[37px]
-    md:rounded-[20px] 
-rounded-[10px]
-    uppercase boldCalibri 
-    text-xl md:text-[72px] 
-    text-black 
-    leading-[28px] md:leading-[67px] 
- mt-[17px]
-  "
-                                >
-                                    Next
-                                </button>
-                            </Link>
-
-                            <p className="CalibriItalic text-white md:mt-[83px] mt-[30px] text-2xl md:text-[58px] mb-[50px]">
-                                #abcd
-                            </p>
-                        </div>
+            {/* Main Slider Container */}
+            <div className="relative w-full max-w-[1200px] mx-auto overflow-hidden">
+              <Swiper
+                onSlideChange={handleSlideChange}
+                onSwiper={(swiper) => {
+                  // Ensure first slide is active on initialization
+                  setTimeout(() => {
+                    swiper.slideTo(0, 0)
+                  }, 100)
+                }}
+                modules={[Pagination, EffectCoverflow, Autoplay]}
+                loop={true}
+                grabCursor={true}
+                centeredSlides={true}
+                slidesPerView={2}
+                spaceBetween={-150}
+                initialSlide={0} // Always start with first slide
+                effect="coverflow"
+                coverflowEffect={{
+                  rotate: 0,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 1,
+                  slideShadows: false,
+                }}
+                pagination={{
+                  clickable: true,
+                  dynamicBullets: false,
+                  el: ".swiper-pagination-custom",
+                }}
+                breakpoints={{
+                  0: {
+                    slidesPerView: 2,
+                    spaceBetween: -100,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: -120,
+                  },
+                  1024: {
+                    slidesPerView: 2,
+                    spaceBetween: -150,
+                  },
+                }}
+                className="vida-swiper"
+              >
+                {avatars.map((avatar, index) => (
+                  <SwiperSlide key={avatar.avatarId} className="vida-slide">
+                    <div
+                      className={`slide-card ${index === activeSlideIndex ? "active" : "inactive"}`}
+                      onClick={() => handleSlideClick(avatar.avatarId)}
+                    >
+                      <div className="card-inner border-[20px] border-[#8DB6D5] rounded-[49px]">
+                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image" />
+                      </div>
                     </div>
-                </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
 
 
-            {/* Pagination Dots */}
+            <div className="">
+              <button
+                onClick={handleNextClick}
+                className="
+                                    bg-white 
+                                    px-6 py-4 
+                                    md:px-[150px] md:py-[37px]
+                                    md:rounded-[20px] 
+                                    rounded-[10px]
+                                    uppercase boldCalibri 
+                                    text-xl md:text-[72px] 
+                                    text-black 
+                                    leading-[28px] md:leading-[67px] 
+                                    md:mt-[99px]
+                                    mt-[17px]
+                                    hover:bg-gray-100
+                                "
+              >
+                Next
+              </button>
+
+              <p className="CalibriItalic text-white md:mt-[83px] mt-[30px] text-2xl md:text-[58px] mb-[50px]">
+                #abcd
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
-            {/* Custom Styles */}
-            <style jsx>{`
+      {/* Pagination Dots */}
+
+
+      {/* Custom Styles */}
+      <style jsx>{`
         .vida-swiper {
           width: 100%;
           padding: 50px 0;
@@ -411,7 +438,7 @@ rounded-[10px]
           align-items: center;
         }
       `}</style>
-        </div>
-    )
+    </div>
+  )
 }
 export default PhotoBoothScreen
