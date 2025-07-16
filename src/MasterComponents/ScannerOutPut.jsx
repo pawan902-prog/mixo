@@ -86,7 +86,7 @@ const ScannerOutput = () => {
                                 <div className="inline-block bg-white p-3 rounded-lg shadow-lg relative right-2">
                                     <QRCode
                                         value={qrCodeData}
-                                        size={100} // this sets both width and height
+                                        size={200} // this sets both width and height
                                         level="H"
                                         includeMargin={true}
                                     />
@@ -103,6 +103,7 @@ const ScannerOutput = () => {
                                 <p className="text-white text-2xl  md:text-[50px] mb-2">
                                     Scan the QR code to download your superhero moment.
                                 </p>
+
 
                                 {/* Emojis */}
                                 <div className="flex justify-center lg:justify-center gap-4 text-4xl md:text-5xl text-center">
@@ -124,9 +125,7 @@ const ScannerOutput = () => {
                         </Link>
 
                         {/* Center Hashtag Text */}
-                        <div className="text-white text-base md:text-xl font-semibold italic px-4 py-1 rounded-md z-10">
-                            #abc25
-                        </div>
+
                     </div>
 
                 </Headerlayout>

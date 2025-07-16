@@ -91,9 +91,7 @@ rounded-[10px]
                             </button>
                         </Link>
 
-                        <p className="CalibriItalic text-white md:mt-[153px] mt-[30px] text-2xl md:text-[58px]">
-                            #abcd
-                        </p>
+
 
                     </div>
 

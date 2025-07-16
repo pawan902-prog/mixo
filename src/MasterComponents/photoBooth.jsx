@@ -216,9 +216,6 @@ const PhotoBoothScreen = () => {
                 Next
               </button>
 
-              <p className="CalibriItalic text-white md:mt-[83px] mt-[30px] text-2xl md:text-[58px] mb-[50px]">
-                #abcd
-              </p>
             </div>
           </div>
         </div>

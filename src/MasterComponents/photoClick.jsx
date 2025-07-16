@@ -57,12 +57,27 @@ const PhotoClick = () => {
     }
 
     const capture = () => {
-        // This function is now only used by the countdown timer
+        // Capture image when countdown reaches zero
+        if (webcamRef.current) {
+            try {
+                const imageSrc = webcamRef.current.getScreenshot();
+                if (imageSrc) {
+                    const file = base64ToFile(imageSrc, 'captured-image.jpg');
+                    setCapturedImage(imageSrc);
+                    setFile(file);
+
+                    // Store captured image in localStorage
+                    localStorage.setItem("sourceImage", imageSrc);
+                }
+            } catch (error) {
+                console.error("Error capturing image:", error);
+            }
+        }
+
         setIsCapturing(false);
         setShowCountdown(false);
         setIsCaptured(true);
     };
-
 
     const retakePhoto = () => {
         setCapturedImage(null);
@@ -84,6 +99,7 @@ const PhotoClick = () => {
         setWebcamReady(false);
     };
 
+
     useEffect(() => {
         if (showCountdown && countdown > 0) {
             const timer = setTimeout(() => {
@@ -94,6 +110,7 @@ const PhotoClick = () => {
             capture();
         }
     }, [showCountdown, countdown]);
+
     const navigate = useNavigate()
     const handleSubmitt = async () => {
         try {
@@ -206,11 +223,27 @@ const PhotoClick = () => {
                     <div className="flex justify-center items-center md:mt-[50px] mt-[30px]">
                         <div className="relative">
                             {/* Circular frame with border */}
-                            <div className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] xl:w-[845px] xl:h-[845px] rounded-full border-[4px] md:border-[20px] border-[#8DB6D5] overflow-hidden bg-black flex items-center justify-center">
+                            <div className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] xl:w-[845px] xl:h-[845px] rounded-full border-[4px] md:border-[20px] border-[#8DB6D5] overflow-hidden  flex items-center justify-center">
                                 {showCountdown ? (
-                                    // Countdown display
-                                    <div className="text-white text-6xl md:text-8xl font-bold">
-                                        {countdown}
+                                    // Countdown display with camera preview behind
+                                    <div className="relative w-full h-full">
+                                        {/* Camera preview behind countdown */}
+                                        <Webcam
+                                            playsInline
+                                            audio={false}
+                                            ref={webcamRef}
+                                            screenshotFormat="image/jpeg"
+                                            videoConstraints={videoConstraints}
+                                            className="w-full h-full object-cover"
+                                            onUserMedia={handleWebcamReady}
+                                            onUserMediaError={handleWebcamError}
+                                        />
+                                        {/* Countdown overlay */}
+                                        <div className="absolute inset-0 flex items-center justify-center bg-opacity-50">
+                                            <div className="text-white text-6xl md:text-8xl font-bold">
+                                                {countdown}
+                                            </div>
+                                        </div>
                                     </div>
                                 ) : capturedImage ? (
                                     // Captured image
