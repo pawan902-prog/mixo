@@ -12,7 +12,14 @@ const ScannerOutput = () => {
     const [error, setError] = useState(null);
     const [isPrinting, setIsPrinting] = useState(false);
     const [showPrintMessage, setShowPrintMessage] = useState("");
+    const [currentTextIndex, setCurrentTextIndex] = useState(0);
     const navigate = useNavigate();
+
+    // Array of messages to cycle through
+    const messages = [
+        "Scan the QR code to download your superhero moment.",
+        "Your print will be ready in 2-3 minutes"
+    ];
 
 
     useEffect(() => {
@@ -165,11 +172,28 @@ const ScannerOutput = () => {
         window.addEventListener("resize", updateSize); // update on resize
         return () => window.removeEventListener("resize", updateSize);
     }, []);
+    // Effect to cycle through messages every 3 seconds
+    useEffect(() => {
+        if (generatedImageUrl) {
+            let lastTime = Date.now();
+
+            const interval = setInterval(() => {
+                const currentTime = Date.now();
+                // Check if enough time has passed (accounting for window focus issues)
+                if (currentTime - lastTime >= 2500) { // Slightly less than 3 seconds to be safe
+                    setCurrentTextIndex((prevIndex) => (prevIndex + 1) % messages.length);
+                    lastTime = currentTime;
+                }
+            }, 3000);
+
+            return () => clearInterval(interval);
+        }
+    }, [generatedImageUrl, messages.length]);
+
     useEffect(() => {
         if (generatedImageUrl) {
             const timer = setTimeout(() => {
                 console.log('Showing print message after 3 seconds');
-                setShowPrintMessage('Your print will be ready in 2-3 minutes');
                 handlePrint();
             }, 3000); // 3 seconds delay
 
@@ -238,13 +262,13 @@ const ScannerOutput = () => {
                             </div>
 
                             {/* Text Content */}
-                            <div className="text-center lg:text-center  ">
+                            <div className="text-center lg:text-center w-full max-w-4xl">
                                 <h1 className="boldCalibri text-4xl md:text-6xl lg:text-7xl text-white mb-2">
                                     Thank you!
                                 </h1>
 
-                                <p className="text-white text-2xl  md:text-[50px] mb-2">
-                                    {showPrintMessage || "Scan the QR code to download your superhero moment."}
+                                <p className="text-white text-2xl md:text-[50px] mb-2 min-h-[130px] md:min-h-[130px] flex items-center justify-center">
+                                    {messages[currentTextIndex]}
                                 </p>
 
                                 {/* Emojis */}
@@ -257,9 +281,9 @@ const ScannerOutput = () => {
 
                         {/* Bottom navigation */}
                     </div>
-                    <div className="flex justify-between items-center w-full relative mt-4 mb-10">
+                    <div className="md:max-w-4xl md:min-w-4xl relative mt-4 mb-10 flex justify-start">
                         {/* Home Button on the Left */}
-                        <button onClick={handleStartOver} className="z-50">
+                        <button onClick={handleStartOver} className="z-50 ml-4 md:ml-8">
                             <img src="./home.png" alt="Home" className="w-[32px] h-[32px] md:w-[57px] md:h-[59px]" />
                         </button>
 
