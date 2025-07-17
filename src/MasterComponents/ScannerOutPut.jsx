@@ -267,10 +267,11 @@ const ScannerOutput = () => {
                                     Thank you!
                                 </h1>
 
-                                <p className="text-white text-2xl md:text-[50px] mb-2 min-h-[130px] md:min-h-[130px] flex items-center justify-center">
-                                    {messages[currentTextIndex]}
+                                <p className="text-white text-2xl md:text-[50px] mb-2  flex items-center justify-center">
+                                    Scan the QR code to download your superhero moment.
                                 </p>
-
+                                <p className="text-white text-2xl md:text-[40px] mb-2  flex items-center justify-center">
+                                    our print will be ready in 2-3 minutes  .                              </p>
                                 {/* Emojis */}
                                 <div className="flex justify-center lg:justify-center gap-4 text-4xl md:text-5xl text-center">
                                     <span>🦸‍♂️</span>
