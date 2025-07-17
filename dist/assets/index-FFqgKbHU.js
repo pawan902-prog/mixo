@@ -82,79 +82,47 @@ rounded-[10px]
             <html>
             <head>
                 <title>Superhero Photo Print</title>
-                <style>
-                    @page { 
-                        size: A4; 
-                        margin: 20mm; 
-                    }
-                    body { 
-                        margin: 0; 
-                        padding: 0; 
-                        font-family: Arial, sans-serif;
-                        background: white;
-                    }
-                    .print-container {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        min-height: 100vh;
-                        padding: 20px;
-                    }
-                    .header {
-                        text-align: center;
-                        margin-bottom: 30px;
-                    }
-                    .title {
-                        font-size: 28px;
-                        font-weight: bold;
-                        margin-bottom: 15px;
-                        color: #333;
-                    }
-                    .subtitle {
-                        font-size: 16px;
-                        color: #666;
-                        margin-bottom: 30px;
-                    }
-                    .image-container {
-                        border: 4px solid #8DB6D5;
-                        border-radius: 20px;
-                        overflow: hidden;
-                        display: inline-block;
-                        max-width: 500px;
-                        margin: 0 auto;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                    }
-                    .image {
-                        width: 100%;
-                        height: auto;
-                        display: block;
-                        max-height: 600px;
-                        object-fit: cover;
-                    }
-                    .footer {
-                        margin-top: 30px;
-                        font-size: 14px;
-                        color: #999;
-                        border-top: 1px solid #eee;
-                        padding-top: 20px;
-                        text-align: center;
-                    }
-                </style>
+                 <style>
+                @page {
+                    size: 4in 6in;
+                    margin: 0;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: Arial, sans-serif;
+                    background: white;
+                    width: 4in;
+                    height: 6in;
+                    overflow: hidden;
+                }
+                .print-container {
+                    width: 4in;
+                    height: 6in;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .image-container {
+                    width: 4in;
+                    height: 5.6in;
+                    overflow: hidden;
+                    padding: 0.1in 0;
+                }
+                .image {
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    object-fit: cover;
+                    object-position: center top;
+                }
+            </style>
             </head>
             <body>
                 <div class="print-container">
-                    <div class="header">
-                        <div class="title">Your Superhero Moment</div>
-                        <div class="subtitle">IHCL Photo Booth Experience</div>
-                    </div>
-                    
                     <div class="image-container">
                         <img class="image" src="${r}" alt="Superhero Photo" />
-                    </div>
-                    
-                    <div class="footer">
-                        <p>Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
                     </div>
                 </div>
                 
