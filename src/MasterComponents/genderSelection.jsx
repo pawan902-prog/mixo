@@ -23,7 +23,7 @@ const GenderSelection = () => {
                     <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-[43px] px-4 mt-[30px] md:mt-[80px] lg:mt-[127px]">
                         {/* MALE CARD */}
                         <div
-                            className={`w-[140px] sm:w-[200px] md:w-[270px] lg:w-[335px] h-auto md:h-[402px] rounded-[20px] flex justify-center items-center flex-col gap-6 md:gap-[60px] cursor-pointer transition-all duration-300 ${selectedGender === 'male'
+                            className={`w-[140px]  md:w-[270px] lg:w-[335px] h-[200px] md:h-[402px] rounded-[20px] flex justify-center items-center flex-col gap-6 md:gap-[60px] cursor-pointer transition-all duration-300 ${selectedGender === 'male'
                                 ? 'bg-[#47667C] border-[4px] md:border-[6px] border-[#8498A7]'
                                 : 'bg-white'
                                 }`}
@@ -32,7 +32,7 @@ const GenderSelection = () => {
                             <img
                                 src={`${selectedGender === 'male' ? './malehover.png' : './Vector.png'
                                     }`}
-                                className="w-[80px] sm:w-[100px] md:w-[135px] h-auto"
+                                className="w-[46px] h-[50px] sm:w-[80px] sm:h-[80px] md:w-[135px] md:h-[135px] lg:w-[150px] lg:h-[150px]"
                                 alt="Male"
                             />
                             <h3
@@ -56,7 +56,7 @@ const GenderSelection = () => {
                                     ? './femalenewhover.png'
                                     : './femalerHover.png'
                                     }`}
-                                className="w-[80px] sm:w-[100px] md:w-[106px] h-auto md:h-[162px]"
+                                className="w-[40px] h-[60px] sm:w-[80px] sm:h-[80px] md:w-[106px] md:h-[162px] lg:w-[120px] lg:h-[180px]"
                                 alt="Female"
                             />
                             <h3
