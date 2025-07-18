@@ -149,8 +149,8 @@ const PhotoBoothScreen = () => {
                       className={`slide-card relative ${index === activeSlideIndex ? "active" : "inactive"}`}
                       onClick={() => handleAvatarSelect(avatar.avatarId)}
                     >
-                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative">
-                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image rounded-[30px]" />
+                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative  overflow-hidden">
+                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image object-cover" />
 
                         {/* Checkbox overlay */}
                         <div className="absolute top-4 right-4">
@@ -180,8 +180,8 @@ const PhotoBoothScreen = () => {
                       className={`slide-card relative ${index + 3 === activeSlideIndex ? "active" : "inactive"}`}
                       onClick={() => handleAvatarSelect(avatar.avatarId)}
                     >
-                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative">
-                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image rounded-[30px]" />
+                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative overflow-hidden">
+                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image object-cover" />
 
                         {/* Checkbox overlay */}
                         <div className="absolute top-4 right-4">
