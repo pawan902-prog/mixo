@@ -17,6 +17,7 @@ const PhotoBoothScreen = () => {
   const [avatars, setAvatars] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeSlideIndex, setActiveSlideIndex] = useState(0)
+  const [selectedAvatarId, setSelectedAvatarId] = useState(null)
 
   const data = JSON.parse(localStorage.getItem("userRegistration") || "{}")
   const selectedGender = localStorage.getItem("selectedGender")
@@ -47,7 +48,9 @@ const PhotoBoothScreen = () => {
 
         // Set initial active avatar
         if (avatarData.length > 0) {
-          localStorage.setItem("activeAvatarId", avatarData[0].avatarId)
+          const firstAvatarId = avatarData[0].avatarId
+          setSelectedAvatarId(firstAvatarId)
+          localStorage.setItem("activeAvatarId", firstAvatarId)
         }
       })
       .catch((err) => {
@@ -56,14 +59,16 @@ const PhotoBoothScreen = () => {
       })
   }, [])
 
-  const handleSlideClick = (slideId) => {
-    localStorage.setItem("activeAvatarId", slideId)
+  const handleAvatarSelect = (avatarId) => {
+    setSelectedAvatarId(avatarId)
+    localStorage.setItem("activeAvatarId", avatarId)
   }
 
   const handleSlideChange = (swiper) => {
     setActiveSlideIndex(swiper.realIndex)
     const currentSlide = avatars[swiper.realIndex]
     if (currentSlide) {
+      setSelectedAvatarId(currentSlide.avatarId)
       localStorage.setItem("activeAvatarId", currentSlide.avatarId)
     }
   }
@@ -122,7 +127,7 @@ const PhotoBoothScreen = () => {
     <div className="">
       {/* Logo */}
       <div className=" ">
-        <div className="md:px-[80px] px-[20px] min-h-screen  bg-cover bg-no-repeat h-full  text-center"
+        <div className="md:px-[40px] px-[20px] min-h-screen  bg-cover bg-no-repeat h-full  text-center"
           style={{ background: `url(${bg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
 
         >
@@ -134,64 +139,72 @@ const PhotoBoothScreen = () => {
             </div>
 
             {/* Main Slider Container */}
-            <div className="relative w-full max-w-[1200px] mx-auto overflow-hidden">
-              <Swiper
-                onSlideChange={handleSlideChange}
-                onSwiper={(swiper) => {
-                  // Ensure first slide is active on initialization
-                  setTimeout(() => {
-                    swiper.slideTo(0, 0)
-                  }, 100)
-                }}
-                modules={[Pagination, EffectCoverflow, Autoplay]}
-                loop={true}
-                grabCursor={true}
-                centeredSlides={true}
-                slidesPerView={2}
-                spaceBetween={-150}
-                initialSlide={0} // Always start with first slide
-                effect="coverflow"
-                coverflowEffect={{
-                  rotate: 0,
-                  stretch: 0,
-                  depth: 100,
-                  modifier: 1,
-                  slideShadows: false,
-                }}
-                pagination={{
-                  clickable: true,
-                  dynamicBullets: false,
-                  el: ".swiper-pagination-custom",
-                }}
-                breakpoints={{
-                  0: {
-                    slidesPerView: 2,
-                    spaceBetween: -100,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                    spaceBetween: -120,
-                  },
-                  1024: {
-                    slidesPerView: 2,
-                    spaceBetween: -150,
-                  },
-                }}
-                className="vida-swiper"
-              >
-                {avatars.map((avatar, index) => (
-                  <SwiperSlide key={avatar.avatarId} className="vida-slide">
+            <div className="relative w-full  mx-auto overflow-hidden">
+              <div className="flex flex-col items-center gap-[39px]">
+                {/* First 3 avatars */}
+                <div className="grid md:grid-cols-3 gap-[39px] grid-cols-1">
+                  {avatars.slice(0, 3).map((avatar, index) => (
                     <div
-                      className={`slide-card ${index === activeSlideIndex ? "active" : "inactive"}`}
-                      onClick={() => handleSlideClick(avatar.avatarId)}
+                      key={avatar.avatarId}
+                      className={`slide-card relative ${index === activeSlideIndex ? "active" : "inactive"}`}
+                      onClick={() => handleAvatarSelect(avatar.avatarId)}
                     >
-                      <div className="card-inner border-[20px] border-[#8DB6D5] rounded-[49px]">
-                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image" />
+                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative">
+                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image rounded-[30px]" />
+
+                        {/* Checkbox overlay */}
+                        <div className="absolute top-4 right-4">
+                          <div className={`w-[64px] h-[64px] rounded-full border-4 flex items-center justify-center transition-all duration-300 ${selectedAvatarId === avatar.avatarId
+                            ? 'bg-[#0E2034] border-[#FFFFFF7D] border-[1px]'
+                            : 'bg-white border-white'
+                            }`}>
+                            {selectedAvatarId === avatar.avatarId && (
+                              <svg width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M30.7601 5.73333L14.4667 24.2133C13.9334 24.812 13.1854 25.1733 12.3854 25.2267H12.2001C11.4654 25.2267 10.7441 24.9613 10.2001 24.4667L1.46539 16.7333C0.225388 15.6413 0.105388 13.72 1.21339 12.48C2.32005 11.228 4.22672 11.12 5.47872 12.228L11.9321 17.948L26.2267 1.73333C27.3334 0.493327 29.2401 0.373329 30.4921 1.46666C31.7321 2.57333 31.8521 4.47866 30.7601 5.73333Z" fill="white" />
+                              </svg>
+
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                  ))}
+                </div>
+
+                {/* Last 2 avatars */}
+                <div className="flex gap-[39px] justify-center flex-wrap
+                ">
+                  {avatars.slice(3).map((avatar, index) => (
+                    <div
+                      key={avatar.avatarId}
+                      className={`slide-card relative ${index + 3 === activeSlideIndex ? "active" : "inactive"}`}
+                      onClick={() => handleAvatarSelect(avatar.avatarId)}
+                    >
+                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative">
+                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image rounded-[30px]" />
+
+                        {/* Checkbox overlay */}
+                        <div className="absolute top-4 right-4">
+                          <div className={`w-[64px] h-[64px] rounded-full border-4 flex items-center justify-center transition-all duration-300 ${selectedAvatarId === avatar.avatarId
+                            ? 'bg-[#0E2034] border-[#FFFFFF7D] border-[1px]'
+                            : 'bg-white border-white'
+                            }`}>
+                            {selectedAvatarId === avatar.avatarId && (
+                              <svg width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M30.7601 5.73333L14.4667 24.2133C13.9334 24.812 13.1854 25.1733 12.3854 25.2267H12.2001C11.4654 25.2267 10.7441 24.9613 10.2001 24.4667L1.46539 16.7333C0.225388 15.6413 0.105388 13.72 1.21339 12.48C2.32005 11.228 4.22672 11.12 5.47872 12.228L11.9321 17.948L26.2267 1.73333C27.3334 0.493327 29.2401 0.373329 30.4921 1.46666C31.7321 2.57333 31.8521 4.47866 30.7601 5.73333Z" fill="white" />
+                              </svg>
+
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+
+
             </div>
 
 
@@ -221,221 +234,7 @@ const PhotoBoothScreen = () => {
         </div>
       </div>
 
-
-      {/* Pagination Dots */}
-
-
-      {/* Custom Styles */}
-      <style jsx>{`
-        .vida-swiper {
-          width: 100%;
-          padding: 50px 0;
-          overflow: visible;
-        }
-
-        .vida-slide {
-          height: auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .slide-card {
-          cursor: pointer;
-          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-          transform-style: preserve-3d;
-          position: relative;
-        }
-
-        .card-inner {
-        //   background: rgba(255, 255, 255, 0.1);
-        //   backdrop-filter: blur(10px);
-        //   border: 10px solid rgba(255, 255, 255, 0.2);
-        //   border-radius: 24px;
-          overflow: hidden;
-        //   box-shadow: 
-        //     0 8px 32px rgba(0, 0, 0, 0.1),
-        //     0 0 0 1px rgba(255, 255, 255, 0.1);
-        //   transition: all 0.4s ease;
-        }
-
-        .avatar-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: all 0.4s ease;
-        }
-
-        /* Force active state on first slide initially */
-        .slide-card.active,
-        .vida-swiper .swiper-slide-active .slide-card {
-          width: 479px;
-          height: 664px;
-          transform: scale(1) translateZ(50px);
-          z-index: 10;
-          opacity: 1;
-        }
-
-        .slide-card.active .card-inner,
-        .vida-swiper .swiper-slide-active .card-inner {
-        //   border: 15px solid rgba(255, 255, 255, 0.4);
-        //   box-shadow: 
-        //     0 20px 60px rgba(0, 0, 0, 0.3),
-        //     0 0 0 1px rgba(255, 255, 255, 0.2),
-        //     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        /* Inactive slides */
-        .slide-card.inactive,
-        .vida-swiper .swiper-slide:not(.swiper-slide-active) .slide-card {
-          width: 320px;
-          height: 440px;
-          transform: scale(0.75) translateZ(-100px);
-          opacity: 0.8;
-          z-index: 5;
-        }
-
-        .slide-card.inactive .card-inner,
-        .vida-swiper .swiper-slide:not(.swiper-slide-active) .card-inner {
-        //   border: 15px solid rgba(255, 255, 255, 0.15);
-        //   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Hover effects */
-        .slide-card:hover {
-          transform: scale(1.02) translateZ(20px) !important;
-        }
-
-        .slide-card.active:hover,
-        .vida-swiper .swiper-slide-active .slide-card:hover {
-          transform: scale(1.05) translateZ(70px) !important;
-        }
-
-        .slide-card.inactive:hover,
-        .vida-swiper .swiper-slide:not(.swiper-slide-active) .slide-card:hover {
-          transform: scale(0.8) translateZ(-80px) !important;
-        }
-
-        /* Pagination styling */
-        .swiper-pagination-custom {
-          position: relative !important;
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          z-index: 20;
-        }
-
-        .swiper-pagination-custom .swiper-pagination-bullet {
-          width: 12px;
-          height: 12px;
-          border: 2px solid rgba(255, 255, 255, 0.6);
-          background: transparent;
-          border-radius: 50%;
-          opacity: 1;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-
-        .swiper-pagination-custom .swiper-pagination-bullet-active {
-          background: white;
-          border-color: white;
-          transform: scale(1.3);
-          box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-          .swiper-pagination-custom.flex.justify-center.gap-3.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
-    display: none !important;
-}
-
-        .swiper-pagination-custom .swiper-pagination-bullet:hover {
-          transform: scale(1.2);
-          border-color: white;
-        }
-
-        /* Mobile responsive adjustments */
-        @media (max-width: 1023px) {
-          .slide-card.active,
-          .vida-swiper .swiper-slide-active .slide-card {
-            width: 380px;
-            height: 520px;
-          }
-          
-          .slide-card.inactive,
-          .vida-swiper .swiper-slide:not(.swiper-slide-active) .slide-card {
-            width: 280px;
-            height: 380px;
-          }
-        }
-
-        @media (max-width: 767px) {
-          .slide-card.active,
-          .vida-swiper .swiper-slide-active .slide-card {
-            width: 300px;
-            height: 420px;
-          }
-          
-          .slide-card.inactive,
-          .vida-swiper .swiper-slide:not(.swiper-slide-active) .slide-card {
-            width: 220px;
-            height: 310px;
-          }
-          
-          .swiper-pagination-custom .swiper-pagination-bullet {
-            width: 10px;
-            height: 10px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .slide-card.active,
-          .vida-swiper .swiper-slide-active .slide-card {
-            width: 260px;
-            height: 360px;
-          }
-          
-          .slide-card.inactive,
-          .vida-swiper .swiper-slide:not(.swiper-slide-active) .slide-card {
-            width: 180px;
-            height: 250px;
-          }
-          
-          .vida-swiper {
-            padding: 30px 0;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .slide-card.active,
-          .vida-swiper .swiper-slide-active .slide-card {
-            width: 220px;
-            height: 300px;
-          }
-          
-          .slide-card.inactive,
-          .vida-swiper .swiper-slide:not(.swiper-slide-active) .slide-card {
-            width: 150px;
-            height: 200px;
-          }
-        }
-
-        /* Ensure proper positioning */
-        .vida-swiper .swiper-slide {
-          position: relative;
-        }
-
-        .vida-swiper .swiper-slide-active {
-          z-index: 10;
-        }
-
-        .vida-swiper .swiper-slide:not(.swiper-slide-active) {
-          z-index: 5;
-        }
-
-        .vida-swiper .swiper-wrapper {
-          align-items: center;
-        }
-      `}</style>
-    </div>
+    </div >
   )
 }
 export default PhotoBoothScreen

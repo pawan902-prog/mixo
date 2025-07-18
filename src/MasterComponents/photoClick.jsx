@@ -25,24 +25,10 @@ const PhotoClick = () => {
     };
 
     const startCountdown = () => {
-        // Capture immediately when button is clicked
-        if (webcamRef.current) {
-            try {
-                const imageSrc = webcamRef.current.getScreenshot();
-                if (imageSrc) {
-                    const file = base64ToFile(imageSrc, 'captured-image.jpg');
-                    setCapturedImage(imageSrc);
-                    setFile(file);
-
-                    // Start 3-second countdown before showing the image
-                    setIsCapturing(true);
-                    setShowCountdown(true);
-                    setCountdown(3);
-                }
-            } catch (error) {
-                console.error("Error capturing image:", error);
-            }
-        }
+        // Start countdown without capturing immediately
+        setIsCapturing(true);
+        setShowCountdown(true);
+        setCountdown(3);
     };
     function base64ToFile(base64String, filename) {
         const arr = base64String.split(',');
@@ -204,7 +190,7 @@ const PhotoClick = () => {
 
                 <Headerlayout>
                     {preview && (
-                        <div className="fixed inset-0 bg-[#002A49E0]/88  z-50 flex items-center justify-center">
+                        <div className="fixed inset-0   z-50 flex items-center justify-center">
                             <div className="relative max-h-full p-4 md:h-[697px] md:w-[662px] w-[189px] h-[180px] z-50">
                                 <img
                                     src="/loading.png"
@@ -223,11 +209,10 @@ const PhotoClick = () => {
                     <div className="flex justify-center items-center md:mt-[50px] mt-[30px]">
                         <div className="relative">
                             {/* Circular frame with border */}
-                            <div className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] xl:w-[845px] xl:h-[845px] rounded-full border-[4px] md:border-[20px] border-[#8DB6D5] overflow-hidden  flex items-center justify-center">
-                                {showCountdown ? (
-                                    // Countdown display with camera preview behind
-                                    <div className="relative w-full h-full">
-                                        {/* Camera preview behind countdown */}
+                            <div className="w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] xl:w-[845px] xl:h-[845px] rounded-full border-[4px] md:border-[20px] border-[#8DB6D5] overflow-hidden flex items-center justify-center">
+                                <div className="relative w-full h-full">
+                                    {/* Always show webcam feed */}
+                                    {!capturedImage && !webcamError && (
                                         <Webcam
                                             playsInline
                                             audio={false}
@@ -238,40 +223,35 @@ const PhotoClick = () => {
                                             onUserMedia={handleWebcamReady}
                                             onUserMediaError={handleWebcamError}
                                         />
-                                        {/* Countdown overlay */}
-                                        <div className="absolute inset-0 flex items-center justify-center bg-opacity-50">
-                                            <div className="text-white text-6xl md:text-8xl font-bold">
+                                    )}
+
+                                    {/* Countdown overlay */}
+                                    {showCountdown && (
+                                        <div className="absolute inset-0 flex items-center justify-center z-10">
+                                            <div className="text-white text-6xl md:text-8xl font-bold  bg-opacity-50 rounded-full w-32 h-32 md:w-48 md:h-48 flex items-center justify-center">
                                                 {countdown}
                                             </div>
                                         </div>
-                                    </div>
-                                ) : capturedImage ? (
-                                    // Captured image
-                                    <img
-                                        src={capturedImage}
-                                        alt="Captured"
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : webcamError ? (
-                                    // Webcam error state
-                                    <div className="text-white text-center p-4">
-                                        <div className="text-2xl mb-2">📷</div>
-                                        <div className="text-sm">Camera access required</div>
-                                        <div className="text-xs mt-2">Please allow camera permissions</div>
-                                    </div>
-                                ) : (
-                                    // Webcam feed
-                                    <Webcam
-                                        playsInline
-                                        audio={false}
-                                        ref={webcamRef}
-                                        screenshotFormat="image/jpeg"
-                                        videoConstraints={videoConstraints}
-                                        className="w-full h-full object-cover"
-                                        onUserMedia={handleWebcamReady}
-                                        onUserMediaError={handleWebcamError}
-                                    />
-                                )}
+                                    )}
+
+                                    {/* Captured image overlay */}
+                                    {capturedImage && (
+                                        <img
+                                            src={capturedImage}
+                                            alt="Captured"
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                        />
+                                    )}
+
+                                    {/* Webcam error state */}
+                                    {webcamError && (
+                                        <div className="absolute inset-0 text-white text-center p-4 flex flex-col items-center justify-center">
+                                            <div className="text-2xl mb-2">📷</div>
+                                            <div className="text-sm">Camera access required</div>
+                                            <div className="text-xs mt-2">Please allow camera permissions</div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
