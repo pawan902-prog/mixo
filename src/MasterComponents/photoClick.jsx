@@ -190,7 +190,7 @@ const PhotoClick = () => {
 
                 <Headerlayout>
                     {preview && (
-                        <div className="fixed inset-0   z-50 flex items-center justify-center">
+                        <div className="fixed inset-0  bg-[#002A49E0]/80  z-50 flex items-center justify-center">
                             <div className="relative max-h-full p-4 md:h-[697px] md:w-[662px] w-[189px] h-[180px] z-50">
                                 <img
                                     src="/loading.png"
@@ -257,7 +257,7 @@ const PhotoClick = () => {
                     </div>
 
                     {/* Action buttons */}
-                    <div className="flex justify-center gap-5 sm:gap-10 md:gap-[120px] lg:gap-[188px] md:mt-[40px] mt-[30px] mb-10">
+                    <div className="flex justify-center gap-3 sm:gap-10 md:gap-[100px] lg:gap-[170px] md:mt-[40px] mt-[30px] mb-10">
                         {!capturedImage ? (
                             // Capture button
                             <button
@@ -281,7 +281,7 @@ const PhotoClick = () => {
                                     disabled={isSubmitting}
                                     className={`px-6 py-3 sm:px-10 md:px-[60px] lg:px-[96px] mt-[30px] md:mt-[100px] lg:mt-[130px] bg-white text-[#002A49] rounded-lg font-semibold text-lg sm:text-2xl md:text-[40px] lg:text-[63px] boldCalibri ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
                                 >
-                                    {isSubmitting ? 'Processing...' : 'Submit'}
+                                    Submit
                                 </button>
                             </>
                         )}
