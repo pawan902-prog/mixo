@@ -8,21 +8,21 @@ const HomeScreen = () => {
                 <Headerlayout>
                     <div className="text-center ">
                         <h3 className="boldCalibri text-2xl md:text-[58px] text-white leading-[28px] md:leading-[67px] md:mt-[116px] mt-[30px]">
-                            The Superhero of Our Success : You
+                            THE SUPERHERO OF OUR SUCCESS : YOU
 
                         </h3>
-                        <p className="CalibrRegular md:text-[48px] text-2xl   text-white md:mt-[46px] mt-[20px]">
-                            The momentum that smashes past every boundary, the power that overcomes every challenge in the way. Yes, YOU are the unstoppable force that is propelling us toward Accelerate 2030. And every champion should look the part. So, strike your most heroic pose and watch AI transform you into your superhero avatar!
+                        <p className=" md:text-[48px] text-2xl   text-white md:mt-[46px] mt-[20px]">
+                            The momentum that smashes past every boundary, the power that overcomes every challenge in the way. Yes, YOU are the unstoppable force that is propelling us toward  <b className="text-white font-bold">Accelerate 2030</b>. And every champion should look the part. So, strike your most heroic pose and watch AI transform you into your superhero avatar!
 
                         </p>
 
                         <div className="mb-[40px]">
-                            <p className="uppercase boldCalibri text-2xl md:text-[58px] text-white leading-[28px] md:leading-[67px] md:mt-[116px] mt-[30px] ">
+                            {/* <p className="uppercase boldCalibri text-2xl md:text-[58px] text-white leading-[28px] md:leading-[67px] md:mt-[116px] mt-[30px] ">
                                 Click Here to Begin
-                            </p>
-                            <Link to='/GenderSelection'>
-                                <button
-                                    className="
+                        </p> */}
+                        <Link to='/GenderSelection'>
+                            <button
+                                className="
     bg-white 
     px-6 py-4 
     md:px-[123px] md:py-[37px]
@@ -32,10 +32,10 @@ rounded-[10px]
     text-xl md:text-[72px] 
     text-black 
     leading-[28px] md:leading-[67px] 
- mt-[17px]
+ mt-[47px]
   "
                                 >
-                                    Accelerate
+                                    Click here to begin
                                 </button>
                             </Link>
 

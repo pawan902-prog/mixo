@@ -202,7 +202,7 @@ const PhotoClick = () => {
                     )}
                     <div className="">
                         <h3 className="boldCalibri text-2xl md:text-[64px] text-white leading-[28px] md:leading-[67px] md:mt-[71px] mt-[30px]">
-                            Click your picture
+                            Click Your Picture
                         </h3>
                     </div>
 

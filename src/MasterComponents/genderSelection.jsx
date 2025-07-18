@@ -17,7 +17,7 @@ const GenderSelection = () => {
                 <Headerlayout>
                     <div className="">
                         <h3 className="boldCalibri text-2xl md:text-[64px] text-white leading-[28px] md:leading-[67px] md:mt-[153px] mt-[30px]">
-                            Select you gender
+                            Select Your Gender
                         </h3>
                     </div>
                     <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-[43px] px-4 mt-[30px] md:mt-[80px] lg:mt-[127px]">
