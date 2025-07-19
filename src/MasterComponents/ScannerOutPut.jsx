@@ -226,12 +226,15 @@ const ScannerOutput = () => {
                                 <p className="text-white text-2xl md:text-[50px] mb-2  flex items-center justify-center">
                                     Scan the QR code to download your superhero moment.
                                 </p>
+                                <p className="text-white text-2xl md:text-[45px] mb-2  flex items-center justify-center">
+                                    You can collect your printout within 5 minutes.
+                                </p>
 
-                                {downloadMessage && (
+                                {/* {downloadMessage && (
                                     <p className="text-green-400 text-xl md:text-[30px] mb-2 flex items-center justify-center">
                                         {downloadMessage}
                                     </p>
-                                )}
+                                )} */}
                                 {/* Emojis */}
 
                             </div>
@@ -239,20 +242,20 @@ const ScannerOutput = () => {
 
                         {/* Bottom navigation */}
                     </div>
-                    <div className="md:max-w-4xl md:min-w-4xl relative mt-4 mb-10 flex justify-start">
+                    <div className="md:max-w-4xl md:min-w-4xl relative mt-[94px]  flex justify-center">
                         {/* Home Button on the Left */}
                         <button onClick={handleStartOver} className="z-50 ml-4 md:ml-8">
                             <img src="./home.png" alt="Home" className="w-[32px] h-[32px] md:w-[57px] md:h-[59px]" />
                         </button>
 
                         {/* Download Status Message */}
-                        {isDownloading && (
+                        {/* {isDownloading && (
                             <div className="absolute left-1/2 transform -translate-x-1/2 bottom-4">
                                 <div className="text-white text-sm font-bold bg-black bg-opacity-50 px-4 py-2 rounded-lg">
                                     Downloading...
                                 </div>
                             </div>
-                        )}
+                        )} */}
                     </div>
 
                 </Headerlayout>

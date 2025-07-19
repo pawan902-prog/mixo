@@ -8,7 +8,7 @@ const HomeScreen = () => {
                 <Headerlayout>
                     <div className="text-center px-4">
                         <h3 className="boldCalibri text-2xl md:text-[46px] text-white leading-[28px] md:leading-[67px] mt-[30px] md:mt-[116px]">
-                            THE SUPERHERO OF OUR SUCCESS You :
+                            THE SUPERHERO OF OUR SUCCESS : YOU
                         </h3>
 
                         <div className="md:text-[41px] text-2xl text-white mt-[40px] md:mt-[140px] leading-[55px]">
