@@ -142,8 +142,8 @@ const PhotoBoothScreen = () => {
             <div className="relative w-full  mx-auto overflow-hidden">
               <div className="flex flex-col items-center gap-[39px]">
                 {/* First 3 avatars */}
-                <div className="grid md:grid-cols-3 gap-[39px] grid-cols-1">
-                  {avatars.slice(0, 3).map((avatar, index) => (
+                <div className="grid md:grid-cols-2 gap-[39px] grid-cols-1">
+                  {Array.isArray(avatars) && avatars?.map((avatar, index) => (
                     <div
                       key={avatar.avatarId}
                       className={`slide-card relative ${index === activeSlideIndex ? "active" : "inactive"}`}
@@ -172,35 +172,7 @@ const PhotoBoothScreen = () => {
                 </div>
 
                 {/* Last 2 avatars */}
-                <div className="flex gap-[39px] justify-center flex-wrap
-                ">
-                  {avatars.slice(3).map((avatar, index) => (
-                    <div
-                      key={avatar.avatarId}
-                      className={`slide-card relative ${index + 3 === activeSlideIndex ? "active" : "inactive"}`}
-                      onClick={() => handleAvatarSelect(avatar.avatarId)}
-                    >
-                      <div className="card-inner border-[10px] border-[#8DB6D5] rounded-[30px] w-[301px] h-[448px] relative overflow-hidden">
-                        <img src={avatar.avatarURL || "/placeholder.svg"} alt="avatar" className="avatar-image object-cover" />
 
-                        {/* Checkbox overlay */}
-                        <div className="absolute top-4 right-4">
-                          <div className={`w-[64px] h-[64px] rounded-full border-4 flex items-center justify-center transition-all duration-300 ${selectedAvatarId === avatar.avatarId
-                            ? 'bg-[#0E2034] border-[#FFFFFF7D] border-[1px]'
-                            : 'bg-white border-white'
-                            }`}>
-                            {selectedAvatarId === avatar.avatarId && (
-                              <svg width="32" height="26" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M30.7601 5.73333L14.4667 24.2133C13.9334 24.812 13.1854 25.1733 12.3854 25.2267H12.2001C11.4654 25.2267 10.7441 24.9613 10.2001 24.4667L1.46539 16.7333C0.225388 15.6413 0.105388 13.72 1.21339 12.48C2.32005 11.228 4.22672 11.12 5.47872 12.228L11.9321 17.948L26.2267 1.73333C27.3334 0.493327 29.2401 0.373329 30.4921 1.46666C31.7321 2.57333 31.8521 4.47866 30.7601 5.73333Z" fill="white" />
-                              </svg>
-
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
 
 
