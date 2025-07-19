@@ -226,7 +226,7 @@ const ScannerOutput = () => {
                                 <p className="text-white text-2xl md:text-[50px] mb-2  flex items-center justify-center">
                                     Scan the QR code to download your superhero moment.
                                 </p>
-                                <p className="text-white text-2xl md:text-[45px] mb-2  flex items-center justify-center">
+                                <p className="text-white text-2xl md:text-[38px] mb-2  flex items-center justify-center">
                                     You can collect your printout within 5 minutes.
                                 </p>
 
