@@ -8,7 +8,7 @@ const HomeScreen = () => {
                 <Headerlayout>
                     <div className="text-center ">
                         <h3 className="boldCalibri text-2xl md:text-[58px] text-white leading-[28px] md:leading-[67px] md:mt-[116px] mt-[30px]">
-                            THE SUPERHERO OF OUR SUCCESS : YOU
+                            THE SUPERHERO OF OUR SUCCESS :
 
                         </h3>
                         <span className="md:text-[48px] text-2xl   text-white md:mt-[46px] mt-[20px] ">
@@ -16,7 +16,7 @@ const HomeScreen = () => {
 
                         </span>
 
-                        <div className="mb-[40px]">
+                        <div className="mt-[200px]">
                             {/* <p className="uppercase boldCalibri text-2xl md:text-[58px] text-white leading-[28px] md:leading-[67px] md:mt-[116px] mt-[30px] ">
                                 Click Here to Begin
                         </p> */}
@@ -25,14 +25,13 @@ const HomeScreen = () => {
                                     className="
     bg-white 
     px-6 py-4 
-    md:px-[123px] md:py-[37px]
+    md:px-[42px] md:py-[37px]
     md:rounded-[20px] 
 rounded-[10px]
     uppercase boldCalibri 
-    text-xl md:text-[72px] 
+    text-xl md:text-[46px] 
     text-black 
     leading-[28px] md:leading-[67px] 
- mt-[47px]
   "
                                 >
                                     Click here to begin

@@ -271,7 +271,7 @@ const ScannerOutput = () => {
                                     Scan the QR code to download your superhero moment.
                                 </p>
                                 <p className="text-white text-2xl md:text-[40px] mb-2  flex items-center justify-center">
-                                    You can Collect your printout within 5 minutes.                         </p>
+                                    You can collect your printout within 5 minutes.                         </p>
                                 {/* Emojis */}
 
                             </div>
