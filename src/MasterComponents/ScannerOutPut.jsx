@@ -8,17 +8,18 @@ import QRCode from "react-qr-code";
 const ScannerOutput = () => {
     const [qrCodeData, setQrCodeData] = useState("");
     const [generatedImageUrl, setGeneratedImageUrl] = useState("");
+    const [downloadImageUrl, setDownloadImageUrl] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isPrinting, setIsPrinting] = useState(false);
-    const [showPrintMessage, setShowPrintMessage] = useState("");
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [downloadMessage, setDownloadMessage] = useState("");
     const [currentTextIndex, setCurrentTextIndex] = useState(0);
     const navigate = useNavigate();
 
     // Array of messages to cycle through
     const messages = [
         "Scan the QR code to download your superhero moment.",
-        "Your print will be ready in 2-3 minutes"
+        "Your image has been saved locally!"
     ];
 
 
@@ -47,6 +48,7 @@ const ScannerOutput = () => {
 
             if (response.result && response.result.downloadLink) {
                 setQrCodeData(response.result.downloadLink);
+                setDownloadImageUrl(response.result.downloadLink);
             } else {
                 setError("Download link not found in response");
                 setIsLoading(false);
@@ -71,92 +73,46 @@ const ScannerOutput = () => {
     };
 
 
-    const handlePrint = () => {
-        if (!generatedImageUrl) {
-            alert('No image available for printing.');
+    const handleDownload = () => {
+        if (!downloadImageUrl) {
+            alert('No image available for download.');
             return;
         }
 
-        setIsPrinting(true);
+        setIsDownloading(true);
+        setDownloadMessage("Downloading image...");
 
-        // Remove print message after printing is done
-        setTimeout(() => {
-            setShowPrintMessage("");
-            setIsPrinting(false);
-        }, 5000); // Remove message after 5 seconds
+        try {
+            // Create a direct download link
+            const link = document.createElement('a');
+            link.href = downloadImageUrl;
 
-        // Create print content
-        const printContent = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Superhero Photo Print</title>
-                 <style>
-                @page {
-                    size: 4in 6in;
-                    margin: 0;
-                }
-                body {
-                    margin: 0;
-                    padding: 0;
-                    font-family: Arial, sans-serif;
-                    background: white;
-                    width: 4in;
-                    height: 6in;
-                    overflow: hidden;
-                }
-                .print-container {
-                    width: 4in;
-                    height: 6in;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
+            // Generate filename with timestamp
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            link.download = `superhero-photo-${timestamp}.jpg`;
 
-                .image-container {
-                    width: 4in;
-                    height: 5.6in;
-                    overflow: hidden;
-                    padding: 0.1in 0;
-                }
-                .image {
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    object-fit: cover;
-                    object-position: center top;
-                }
-            </style>
-            </head>
-            <body>
-                <div class="print-container">
-                    <div class="image-container">
-                        <img class="image" src="${generatedImageUrl}" alt="Superhero Photo" />
-                    </div>
-                </div>
-                
-                <script>
-                    window.onload = function() {
-                        setTimeout(function() {
-                            window.print();
-                            setTimeout(function() {
-                                window.close();
-                            }, 1000);
-                        }, 500);
-                    };
-                </script>
-            </body>
-            </html>
-        `;
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-        // Open new window and print
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-        if (printWindow) {
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-        } else {
-            alert('Popup blocked. Please allow popups and try again.');
-            setIsPrinting(false);
+            setDownloadMessage("Image downloaded successfully!");
+
+            // Remove message after 3 seconds
+            setTimeout(() => {
+                setDownloadMessage("");
+                setIsDownloading(false);
+            }, 3000);
+
+        } catch (error) {
+            console.error('Download failed:', error);
+            setDownloadMessage("Download failed. Please try again.");
+            setIsDownloading(false);
+
+            // Remove error message after 3 seconds
+            setTimeout(() => {
+                setDownloadMessage("");
+            }, 3000);
         }
     };
 
@@ -191,15 +147,15 @@ const ScannerOutput = () => {
     }, [generatedImageUrl, messages.length]);
 
     useEffect(() => {
-        if (generatedImageUrl) {
+        if (downloadImageUrl) {
             const timer = setTimeout(() => {
-                console.log('Showing print message after 3 seconds');
-                handlePrint();
+                console.log('Auto-downloading image after 3 seconds');
+                handleDownload();
             }, 3000); // 3 seconds delay
 
-            return () => clearTimeout(timer); // cleanup if `generatedImageUrl` changes quickly
+            return () => clearTimeout(timer); // cleanup if `downloadImageUrl` changes quickly
         }
-    }, [generatedImageUrl])
+    }, [downloadImageUrl])
 
     if (isLoading) {
         return (
@@ -271,7 +227,13 @@ const ScannerOutput = () => {
                                     Scan the QR code to download your superhero moment.
                                 </p>
                                 <p className="text-white text-2xl md:text-[40px] mb-2  flex items-center justify-center">
-                                    You can collect your printout within 5 minutes.                         </p>
+                                    Your image will be automatically downloaded to your device.
+                                </p>
+                                {downloadMessage && (
+                                    <p className="text-green-400 text-xl md:text-[30px] mb-2 flex items-center justify-center">
+                                        {downloadMessage}
+                                    </p>
+                                )}
                                 {/* Emojis */}
 
                             </div>
@@ -285,26 +247,14 @@ const ScannerOutput = () => {
                             <img src="./home.png" alt="Home" className="w-[32px] h-[32px] md:w-[57px] md:h-[59px]" />
                         </button>
 
-                        {/* Center Printer Button */}
-                        {/* <button
-                            onClick={() => {
-                                if (generatedImageUrl) {
-                                    console.log('Printing image...');
-                                    handlePrint();
-                                } else {
-                                    alert('Please wait for the image to load before printing.');
-                                }
-                            }}
-                            disabled={isPrinting || !generatedImageUrl}
-                            className="z-50 cursor-pointer hover:scale-105 transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <img src="./printer.png" className="md:w-[135px] md:h-[135px] h-auto w-[180px]" alt="Print" />
-                            {isPrinting && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="text-white text-sm font-bold">Printing...</div>
+                        {/* Download Status Message */}
+                        {isDownloading && (
+                            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-4">
+                                <div className="text-white text-sm font-bold bg-black bg-opacity-50 px-4 py-2 rounded-lg">
+                                    Downloading...
                                 </div>
-                            )}
-                        </button> */}
+                            </div>
+                        )}
                     </div>
 
                 </Headerlayout>
