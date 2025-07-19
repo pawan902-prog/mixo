@@ -226,9 +226,7 @@ const ScannerOutput = () => {
                                 <p className="text-white text-2xl md:text-[50px] mb-2  flex items-center justify-center">
                                     Scan the QR code to download your superhero moment.
                                 </p>
-                                <p className="text-white text-2xl md:text-[40px] mb-2  flex items-center justify-center">
-                                    Your image will be automatically downloaded to your device.
-                                </p>
+
                                 {downloadMessage && (
                                     <p className="text-green-400 text-xl md:text-[30px] mb-2 flex items-center justify-center">
                                         {downloadMessage}
