@@ -140,39 +140,47 @@
 }
 
 @font-face {
-  font-family: 'Calibri';
-  src: url('./CalibriBold.TTF') format('opentype');
+  font-family: 'TestNational2Bold';
+  src: url('./TestNational2-Bold.otf') format('opentype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'CalibrRegular';
-  src: url('./CalibriRegular.ttf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
+  font-family: 'TestNational2Regular';
+  src: url('./TestNational2-Regular.otf') format('opentype');
 }
 
 @font-face {
-  font-family: 'CalibriItalic';
-  src: url('./CalibriItalic.ttf') format('opentype');
+  font-family: 'TestNational2Medium';
+  src: url('./TestNational2-Medium.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'TestNational2Condensed';
+  src: url('./TestNational2Condensed-Bold.otf') format('opentype');
+}
+
+.TestNational2Regular {
+  font-family: 'TestNational2Regular';
   font-weight: bold;
   font-style: normal;
 }
 
-
-.boldCalibri {
-  font-family: 'Calibri';
+.TestNational2Bold {
+  font-family: 'TestNational2Bold';
   font-weight: bold;
   font-style: normal;
 }
 
-.CalibrRegular {
-  font-family: 'CalibrRegular';
+.TestNational2Medium {
+  font-family: 'TestNational2Medium';
+  font-weight: bold;
   font-style: normal;
 }
 
-.CalibriItalic {
-  font-family: 'CalibriItalic';
+.TestNational2Condensed {
+  font-family: 'TestNational2Condensed';
+  font-weight: bold;
   font-style: normal;
 }

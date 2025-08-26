@@ -1,32 +1,28 @@
 import React from "react";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import HomeScreen from "./MasterComponents/HomeScreen";
-import GenderSelection from "./MasterComponents/genderSelection";
-import PhotoClick from "./MasterComponents/photoClick";
-import ScannerOutput from "./MasterComponents/ScannerOutPut";
-import PhotoBoothScreen from "./MasterComponents/photoBooth";
-
-// Redirection logic for `/`
-
-// Optional layout wrapper
-
+import { Route, Routes } from "react-router-dom";
+import Home from "./MasterComponent/Home";
+import X25_Chat_Inputs from "./MasterComponent/X25_Chat";
+import QuestionScreen from "./MasterComponent/QuestionScreen";
+import FinalOutPutScreen from "./MasterComponent/FinalOutputScreen";
+import ChatScreen from "./MasterComponent/ChatScreen";
+import ScannerScreen from "./MasterComponent/ScannerScreen";
+import PDFGenerator from "./MasterComponent/PDFGenerator";
+import ScrollToTop from "./scrolltop";
 
 const App = () => {
   return (
-    <Routes>
-      {/* Main route wrapper */}
-      <Route path="/" element={<HomeScreen />}>
-
-      </Route>
-      <Route path="/genderSelection" element={<GenderSelection />}>
-
-      </Route>
-      <Route path="/PhotoClick" element={<PhotoClick />}>
-      </Route>
-      <Route path="/ScannerOutput" element={<ScannerOutput />}></Route>
-      <Route path="/PhotoBoothScreen" element={<PhotoBoothScreen />}></Route>
-    </Routes>
-  );
-};
-
-export default App;
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/x25-chat" element={<X25_Chat_Inputs />} />
+        <Route path="/QuestionScreen" element={<QuestionScreen />} />
+        <Route path="/FinalOutPutScreen" element={<FinalOutPutScreen />} />
+        <Route path="/chat" element={<ChatScreen />} />
+        <Route path="/scanner" element={<ScannerScreen />} />
+        <Route path="/pdf-generator" element={<PDFGenerator />} />
+      </Routes>
+    </>
+  )
+}
+export default App
