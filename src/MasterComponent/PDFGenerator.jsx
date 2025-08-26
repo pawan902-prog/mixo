@@ -264,14 +264,29 @@ const PDFGenerator = ({ agendaData }) => (
 
                                         <View style={styles.sessionContainer}>
                                             {/* Time */}
-                                            <View style={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
-                                                <Image src="/schedule.png" style={{ height: '20px', width: '20px' }} />
+                                            <View style={{ display: 'flex', flexDirection: 'row', gap: 5 }}>
+                                                <Image
+                                                    src="/schedule.png"
+                                                    style={{
+                                                        maxHeight: 20,
+                                                        maxWidthidth: 20,
+                                                        objectFit: 'contain' // makes image scale properly within the frame
+                                                    }}
+                                                />
+
                                                 <Text style={styles.sessionTime}>{event.time}</Text>
                                             </View>
-
                                             {/* Location */}
-                                            <View style={{ display: 'flex', flexDirection: 'row', gap: 0, marginTop: 5 }}>
-                                                <Image src="/location.png" style={{ height: '23px', width: '25px', marginRight: '5px' }} />
+                                            <View style={{ display: 'flex', flexDirection: 'row', gap: 4, marginTop: 5 }}>
+                                                <Image
+                                                    src="/location.png"
+                                                    style={{
+                                                        maxHeight: 20,
+                                                        maxWidthidth: 20,
+                                                        objectFit: 'contain' // makes image scale properly within the frame
+                                                    }}
+                                                />
+
                                                 <Text style={styles.sessionLocation}>{event.location} {event?.stageNumber}</Text>
                                             </View>
 
@@ -409,7 +424,7 @@ const AgendaPDFDownloader = () => {
 
     return (
         <div>
-            <PDFGenerator agendaData={agendaData} />
+            {/* <PDFGenerator agendaData={agendaData} /> */}
 
 
             <PDFDownloadLink document={<PDFGenerator agendaData={agendaData} />} fileName="xerocon-agenda.pdf">
