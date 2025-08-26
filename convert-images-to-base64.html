@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Base64 Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .image-input {
+            margin: 20px 0;
+        }
+
+        .base64-output {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Image to Base64 Converter for PDF Generator</h1>
+    <p>Use this tool to convert your images to base64 strings. Copy the output and replace the placeholder strings in
+        your PDFGenerator.jsx file.</p>
+
+    <div class="image-input">
+        <h3>Convert Image to Base64</h3>
+        <input type="file" id="imageInput" accept="image/*">
+        <button onclick="convertImage()">Convert</button>
+        <button onclick="clearOutput()">Clear</button>
+    </div>
+
+    <div id="imagePreview"></div>
+    <div id="base64Output"></div>
+
+    <div class="image-input">
+        <h3>Quick Convert for Your Images</h3>
+        <p>Click the buttons below to convert your specific images:</p>
+        <button onclick="convertSpecificImage('pdflogo.png')">Convert pdflogo.png</button>
+        <button onclick="convertSpecificImage('schedule.png')">Convert schedule.png</button>
+        <button onclick="convertSpecificImage('location.png')">Convert location.png</button>
+        <button onclick="convertSpecificImage('bottom.png')">Convert bottom.png</button>
+    </div>
+
+    <script>
+        function convertImage() {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64 = e.target.result;
+                    displayResult(file.name, base64);
+                    displayImagePreview(base64);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select an image file first.');
+            }
+        }
+
+        function convertSpecificImage(filename) {
+            // Create a canvas to draw the image and get base64
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                try {
+                    const base64 = canvas.toDataURL('image/png');
+                    displayResult(filename, base64);
+                    displayImagePreview(base64);
+                } catch (e) {
+                    // If CORS fails, try to load from public folder
+                    loadImageFromPublic(filename);
+                }
+            };
+            img.onerror = function () {
+                loadImageFromPublic(filename);
+            };
+            img.src = `/${filename}`;
+        }
+
+        function loadImageFromPublic(filename) {
+            fetch(`/${filename}`)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const base64 = e.target.result;
+                        displayResult(filename, base64);
+                        displayImagePreview(base64);
+                    };
+                    reader.readAsDataURL(blob);
+                })
+                .catch(error => {
+                    alert(`Error loading ${filename}: ${error.message}`);
+                });
+        }
+
+        function displayResult(filename, base64) {
+            const output = document.getElementById('base64Output');
+            output.innerHTML = `
+                <h4>Base64 for ${filename}:</h4>
+                <div class="base64-output">${base64}</div>
+                <button onclick="copyToClipboard('${base64}')">Copy to Clipboard</button>
+            `;
+        }
+
+        function displayImagePreview(base64) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = `
+                <h4>Preview:</h4>
+                <img src="${base64}" class="image-preview" alt="Preview">
+            `;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Base64 copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Base64 copied to clipboard!');
+            });
+        }
+
+        function clearOutput() {
+            document.getElementById('base64Output').innerHTML = '';
+            document.getElementById('imagePreview').innerHTML = '';
+        }
+    </script>
+</body>
+
+</html>
