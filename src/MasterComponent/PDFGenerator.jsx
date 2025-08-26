@@ -261,6 +261,7 @@ const PDFGenerator = ({ agendaData }) => (
                                         ...styles.dayBox,
                                         backgroundColor: isThursday ? 'rgba(9, 128, 198, 0.2)' : styles.dayBox.backgroundColor,
                                     }}>
+
                                         <View style={styles.sessionContainer}>
                                             {/* Time */}
                                             <View style={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
