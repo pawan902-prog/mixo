@@ -43,8 +43,6 @@ const CampaignsPage: React.FC = () => {
             // Check if campaign matches platform filter
             const matchesPlatform =
                 platformFilter === 'all' || campaign.platforms.includes(platformFilter);
-
-            // Return true if all filters match
             return matchesSearch && matchesStatus && matchesPlatform;
         });
     }, [campaigns, searchTerm, statusFilter, platformFilter]);
