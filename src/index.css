@@ -139,48 +139,8 @@
   }
 }
 
-@font-face {
-  font-family: 'TestNational2Bold';
-  src: url('./TestNational2-Bold.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'TestNational2Regular';
-  src: url('./TestNational2-Regular.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'TestNational2Medium';
-  src: url('./TestNational2-Medium.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'TestNational2Condensed';
-  src: url('./TestNational2Condensed-Bold.otf') format('opentype');
-}
-
-.TestNational2Regular {
-  font-family: 'TestNational2Regular';
-  font-weight: bold;
-  font-style: normal;
-}
-
-.TestNational2Bold {
-  font-family: 'TestNational2Bold';
-  font-weight: bold;
-  font-style: normal;
-}
-
-.TestNational2Medium {
-  font-family: 'TestNational2Medium';
-  font-weight: bold;
-  font-style: normal;
-}
-
-.TestNational2Condensed {
-  font-family: 'TestNational2Condensed';
-  font-weight: bold;
-  font-style: normal;
+html,
+body {
+  background-color: white;
+  color: black;
 }

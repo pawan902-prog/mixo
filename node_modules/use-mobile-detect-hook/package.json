@@ -1,0 +1,66 @@
+{
+  "name": "use-mobile-detect-hook",
+  "version": "1.0.5",
+  "description": "The React hook to detect if the device is mobile or desktop.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haldarmahesh/use-mobile-detect-hook.git"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "test": "npm run build && jest --coverage",
+    "test-watch": "npm run build && jest --watchAll --coverage",
+    "lint": "./node_modules/eslint/bin/eslint.js --ext js,jsx src",
+    "lint-fix": "./node_modules/eslint/bin/eslint.js --ext js,jsx src --fix",
+    "format:check": "prettier --config ./.prettierrc --list-different \"src/**/*{.ts,.js,.json,.css,.scss}\"",
+    "format:fix": "pretty-quick --staged",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "react": "^16.7.0-alpha.0"
+  },
+  "files": [
+    "build/index.js",
+    "build/index.d.ts"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test && npm run format:fix && npm run lint"
+    }
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-compat": "^3.9.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.11.1",
+    "husky": "1.1.2",
+    "jest": "^26.6.3",
+    "prettier": "1.14.3",
+    "pretty-quick": "^1.8.0",
+    "react": "^16.7.0-alpha.0",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3",
+    "@types/jest": "^26.0.19"
+  },
+  "engines": {
+    "node": ">=8",
+    "npm": ">=5"
+  },
+  "keywords": [
+    "React",
+    "hook",
+    "javascript",
+    "mobile",
+    "detect",
+    "device",
+    "type"
+  ],
+  "author": "haldarmahesh",
+  "license": "MIT",
+  "dependencies": {}
+}
